@@ -1,5 +1,5 @@
 import gradio as gr
-import PyMuPDF
+import pymupdf
 # from Syncfusion.OCRProcessor import OCRProcessor
 # from Syncfusion.Pdf.Parsing import PdfLoadedDocument
 from langchain.chains import LLMChain
@@ -35,7 +35,7 @@ GROQ_API_KEY = "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"
 def extract_text_from_pdf(pdf_content):
     """Extract text from PDF content using OCR."""
     try:
-        doc = PyMuPDF.open(stream=pdf_content, filetype="pdf")
+        doc = pymupdf.open(stream=pdf_content, filetype="pdf")
         text = ""
         for page in doc:
             pix = page.get_pixmap()
