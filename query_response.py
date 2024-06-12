@@ -232,5 +232,3 @@ def process_query(query):
 #
 # iface.launch()
 
-
-process_query("Hi")
