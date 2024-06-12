@@ -23,8 +23,8 @@ from groq import Groq
 # Use environment variables for sensitive information
 import os
 # AWS access credentials
-access_key = 'AKIAUI7N373AFR74QX5H'
-secret_key = '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'
+access_key = ''
+secret_key = ''
 
 # S3 bucket details
 bucket_name = 'sentinelx-prod'
