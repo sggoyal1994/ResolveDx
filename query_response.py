@@ -1,8 +1,12 @@
 import gradio as gr
-from Syncfusion.OCRProcessor import OCRProcessor
-from Syncfusion.Pdf.Parsing import PdfLoadedDocument
+import fitz  # PyMuPDF
+# from Syncfusion.OCRProcessor import OCRProcessor
+# from Syncfusion.Pdf.Parsing import PdfLoadedDocument
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
+from PIL import Image
+import pytesseract
+pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
 from PIL import Image
 import os
 import io
@@ -29,30 +33,45 @@ prefix = 'LOTO/Documents/LOTOFormDocuments/'
 GROQ_API_KEY = "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"
 
 def extract_text_from_pdf(pdf_content):
+    """Extract text from PDF content using OCR."""
     try:
-        # Initialize the OCR processor
-        processor = OCRProcessor()
-
-        # Load the PDF document from the byte content
-        stream = io.BytesIO(pdf_content)
-        pdf_loaded_document = PdfLoadedDocument(stream)
-
-        # Set the OCR language
-        processor.Settings.Language = "English"
-
-        # Perform OCR on the PDF document
-        processor.PerformOCR(pdf_loaded_document)
-
-        # Extract the text from the OCRed PDF
+        doc = fitz.open(stream=pdf_content, filetype="pdf")
         text = ""
-        for page in pdf_loaded_document.Pages:
-            text += page.ExtractText()
-
-        print("Extracted text from PDF: ", text[:500])
+        for page in doc:
+            pix = page.get_pixmap()
+            img = Image.open(io.BytesIO(pix.tobytes()))
+            text += pytesseract.image_to_string(img)
+        print("Extracted text from PDF: ", text[:10])  # Print the first 500 characters
         return text
     except Exception as e:
         print("Failed to extract text from PDF:", e)
         return ""
+
+# def extract_text_from_pdf(pdf_content):
+#     try:
+#         # Initialize the OCR processor
+#         processor = OCRProcessor()
+#
+#         # Load the PDF document from the byte content
+#         stream = io.BytesIO(pdf_content)
+#         pdf_loaded_document = PdfLoadedDocument(stream)
+#
+#         # Set the OCR language
+#         processor.Settings.Language = "English"
+#
+#         # Perform OCR on the PDF document
+#         processor.PerformOCR(pdf_loaded_document)
+#
+#         # Extract the text from the OCRed PDF
+#         text = ""
+#         for page in pdf_loaded_document.Pages:
+#             text += page.ExtractText()
+#
+#         print("Extracted text from PDF: ", text[:500])
+#         return text
+#     except Exception as e:
+#         print("Failed to extract text from PDF:", e)
+#         return ""
 
 def preprocess_text(text):
     try:
@@ -212,6 +231,3 @@ def process_query(query):
 # )
 #
 # iface.launch()
-
-
-process_query("Hi")
