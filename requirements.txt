@@ -10,4 +10,9 @@ chromadb==0.5.0
 langchain-community==0.2.4
 uuid==1.30
 langchain==0.2.3
+Flask==3.0.2
+Flask-Bcrypt==1.0.1
+Flask-Cors==4.0.0
+gunicorn==21.2.0
+bcrypt==4.1.2
 Syncfusion.PDF.OCR.NET
