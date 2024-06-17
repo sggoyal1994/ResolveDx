@@ -63,6 +63,7 @@ def query_response():
             response_data = {"message": response, "session_id": session_id}
             return jsonify({'response': response_data, "success": True}), 200
         else:
+            logger.info("Response: Query Cannot be blank")
             return jsonify({'response': 'Query Cannot be blank', "success": False}), 401
     except Exception as err:
         return jsonify({'response': err, "success": False}), 500
